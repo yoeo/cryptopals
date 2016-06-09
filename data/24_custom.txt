@@ -1,0 +1,47 @@
+About Ship
+
+Use the ship option to send streaming binary and supporting files, if any, from the client node to the compute nodes. Pig does not automatically ship dependencies; it is your responsibility to explicitly specify all the dependencies and to make sure that the software the processing relies on (for instance, perl or python) is installed on the cluster. Supporting files are shipped to the task's current working directory and only relative paths should be specified. Any pre-installed binaries should be specified in the PATH.
+
+Only files, not directories, can be specified with the ship option. One way to work around this limitation is to tar all the dependencies into a tar file that accurately reflects the structure needed on the compute nodes, then have a wrapper for your script that un-tars the dependencies prior to execution.
+
+Note that the ship option has two components: the source specification, provided in the ship( ) clause, is the view of your machine; the command specification is the view of the actual cluster. The only guarantee is that the shipped files are available in the current working directory of the launched job and that your current working directory is also on the PATH environment variable.
+
+Shipping files to relative paths or absolute paths is not supported since you might not have permission to read/write/execute from arbitrary paths on the clusters.
+
+Note the following:
+
+    It is safe only to ship files to be executed from the current working directory on the task on the cluster.
+
+    OP = stream IP through 'script';
+    or
+    DEFINE CMD 'script' ship('/a/b/script');
+    OP = stream IP through 'CMD';
+
+    Shipping files to relative paths or absolute paths is undefined and mostly will fail since you may not have permissions to read/write/execute from arbitraty paths on the actual clusters.
+
+About Cache
+
+The ship option works with binaries, jars, and small datasets. However, loading larger datasets at run time for every execution can severely impact performance. Instead, use the cache option to access large files already moved to and available on the compute nodes. Only files, not directories, can be specified with the cache option.
+About Auto-Ship
+
+If the ship and cache options are not specified, Pig will attempt to auto-ship the binary in the following way:
+
+    If the first word on the streaming command is perl or python, Pig assumes that the binary is the first non-quoted string it encounters that does not start with dash.
+
+    Otherwise, Pig will attempt to ship the first string from the command line as long as it does not come from /bin, /usr/bin, /usr/local/bin. Pig will determine this by scanning the path if an absolute path is provided or by executing which. The paths can be made configurable using the set stream.skippath option (you can use multiple set commands to specify more than one path to skip).
+
+If you don't supply a DEFINE for a given streaming command, then auto-shipping is turned off.
+
+Note the following:
+
+    If Pig determines that it needs to auto-ship an absolute path it will not ship it at all since there is no way to ship files to the necessary location (lack of permissions and so on).
+
+    OP = stream IP through `/a/b/c/script`;
+    or
+    OP = stream IP through `perl /a/b/c/script.pl`;
+
+    Pig will not auto-ship files in the following system directories (this is determined by executing 'which <file>' command).
+
+    /bin /usr/bin /usr/local/bin /sbin /usr/sbin /usr/local/sbin
+
+    To auto-ship, the file in question should be present in the PATH. So if the file is in the current working directory then the current working directory should be in the PATH.
