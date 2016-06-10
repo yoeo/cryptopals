@@ -1,4 +1,4 @@
-# Yet Another Cryptopals repo
+# Yet Another Cryptopals repo [![Build Status](https://travis-ci.org/yoeo/cryptopals.svg?branch=master)](https://travis-ci.org/yoeo/cryptopals)
 Hacking modern Cryptography / Cryptopals challenges answers in Ruby
 
 ## What is it?
