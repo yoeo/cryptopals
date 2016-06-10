@@ -10,4 +10,4 @@ OptionParser.new do |opts|
 end.parse!
 test_set = ARGV.empty? ? '' : "test_set_#{ARGV[0]}"
 
-system("rspec -fd #{filters} spec/#{test_set}*")
+exit system("rspec -fd #{filters} spec/#{test_set}*")
