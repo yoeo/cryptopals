@@ -10,7 +10,6 @@ module Crypto
 
   def to_hex(bytes)
     bytes.pack('C*').unpack('H*').first
-#    bytes.map { |e| e.to_s(16).rjust(2, '0') }.reduce(&:+)
   end
 
   def to_blocks(text)
