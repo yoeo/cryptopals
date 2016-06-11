@@ -18,7 +18,8 @@ Along with the challenges answers you will find rough implementation
 of algorithms used in cryptography like SHA1, MD4, MT19937...
 
 ## How to use it?
-Install the dependencies with ```bundle install``` and run it: ```./run.rb```
+Use ```ruby >= 2.2```,
+install the dependencies with ```bundle install``` and run it: ```./run.rb```
 
 Usage:
 
