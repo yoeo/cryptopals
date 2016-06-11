@@ -20,7 +20,7 @@ module Oracle
     attr_reader :key
 
     def initialize(prng_class)
-      @key = rand_i(0...2**16)
+      @key = rand_i(2**16)
       @prng_class = prng_class
     end
 

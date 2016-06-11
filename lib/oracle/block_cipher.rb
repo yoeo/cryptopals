@@ -35,7 +35,7 @@ module Oracle
   # Appends a secret text, prepend garbage then encrypts in ECB mode
   class RandomAppendText < AppendText
     def encrypt(text)
-      super(rand_text(rand_i(0..255)) + text)
+      super(rand_text(rand_i(255)) + text)
     end
   end
 
