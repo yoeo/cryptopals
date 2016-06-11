@@ -21,8 +21,12 @@ module Crypto
     SecureRandom.random_bytes(length)
   end
 
-  def rand_i(range)
-    SecureRandom.random_number(range)
+  def rand_i(value)
+    if value.instance_of?(Range) # for ruby < 2.3 compatibility
+      value.first + SecureRandom.random_number(value.size)
+    else
+      SecureRandom.random_number(value)
+    end
   end
 
   def rand_block(chunk = [])
