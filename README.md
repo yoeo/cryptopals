@@ -33,7 +33,7 @@ run.rb [--help] [--slow] [SET_NUMBER]
 Examples:
 ```bash
 ./run.rb          # run all tests, except the slow ones
-./run.rb --slow 2 # run only the slow tests of the Set-2
+./run.rb --slow 2 # run all Set#2 tests including the slow ones
 ```
 
 Go to http://cryptopals.com to view the tests,
