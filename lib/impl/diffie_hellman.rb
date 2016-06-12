@@ -24,7 +24,7 @@ module Impl
       @public_key = @g.to_bn.mod_exp(@private_key, @p).to_i
     end
 
-    def session_key(other_public_key)
+    def compute_key(other_public_key)
       other_public_key.to_bn.mod_exp(@private_key, @p).to_i
     end
   end
