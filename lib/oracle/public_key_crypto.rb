@@ -5,9 +5,6 @@ require_relative 'common'
 module Oracle
   # Diffie-Hellman key exchange
   class Echo < Base
-    STATE_MACHINE =
-      %w(arguments public_key message response authenticate).freeze
-
     def initialize(dh_class)
       @dh_class = dh_class
       @dh = nil
@@ -15,9 +12,13 @@ module Oracle
       @message = nil
     end
 
+    def state_machine
+      %w(arguments public_key message response authenticate)
+    end
+
     def step(args = nil)
       step_i, step_args = args || [0, []]
-      [step_i + 1, send(STATE_MACHINE[step_i], *step_args)]
+      [step_i + 1, send(state_machine[step_i], *step_args)]
     end
 
     def encrypt
@@ -60,30 +61,80 @@ module Oracle
     end
   end
 
-  # Inject parameters durring Diffie-Hellman key exchange
-  class EchoInjecter < Echo
+  # Base class for man in the middle attacks
+  class ManInTheMiddle
+    def method_missing(id, *args)
+      unless state_machine.include? id.to_s
+        raise NoMethodError, "undefined method `#{id}'"
+      end
+      args # relay
+    end
+
     def step(args = nil)
-      step_i, result = super(args)
-      [step_i - 1, result]
+      step_i, step_args = args || [0, []]
+      [step_i, send(state_machine[step_i], *step_args)]
     end
+  end
 
-    def relay(*args)
-      args
+  # Inject parameters durring Diffie-Hellman key exchange
+  class EchoManInTheMiddle < ManInTheMiddle
+    def state_machine
+      %w(arguments public_key message response authenticate)
     end
-
-    alias arguments relay
-    alias response relay
-    alias authenticate relay
 
     def public_key(p, g, _remote_public_key)
-      @p = p
-      [p, g, p]
+      [p, g, @p = p]
     end
-
-    alias arguments relay
 
     def message(_remote_public_key)
       [@p]
+    end
+  end
+
+  # Diffie-Hellman negociated group key exchange
+  class EchoNG < Echo
+    def state_machine
+      %w(parameters ack public_key_a public_key_b message response authenticate)
+    end
+
+    def parameters
+      @dh = @dh_class.new
+      [@dh.p, @dh.g]
+    end
+
+    def ack(p, g)
+      @dh = @dh_class.new(p, g)
+      ['ACK']
+    end
+
+    def public_key_a(ack_message)
+      raise 'ack failed' unless ack_message == 'ACK'
+      [@dh.public_key]
+    end
+
+    def public_key_b(remote_public_key)
+      session_key = @dh.compute_key(remote_public_key).to_s
+      @key_text = OpenSSL::Digest::SHA1.digest(session_key)[0...16]
+      [@dh.public_key]
+    end
+
+    def right_session_key?(session_key)
+      @key_text == OpenSSL::Digest::SHA1.digest(session_key.to_s)[0...16]
+    end
+  end
+
+  # Inject parameters durring Diffie-Hellman negociated group key exchange
+  class EchoNGManInTheMiddle < ManInTheMiddle
+    def initialize(version)
+      @version = version
+    end
+
+    def state_machine
+      %w(parameters ack public_key_a public_key_b message response authenticate)
+    end
+
+    def ack(p, _g)
+      [p, [1, p, p - 1][@version]]
     end
   end
 end
