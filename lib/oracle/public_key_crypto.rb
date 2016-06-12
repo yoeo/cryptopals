@@ -8,17 +8,15 @@ module Oracle
     STATE_MACHINE =
       %w(arguments public_key message response authenticate).freeze
 
-    attr_reader :authenticated
-
-    def initialize
-      @key_gen = nil
+    def initialize(dh_class)
+      @dh_class = dh_class
+      @dh = nil
       @key_text = nil
       @message = nil
     end
 
     def step(args = nil)
       step_i, step_args = args || [0, []]
-      puts "#{self}: #{step_i}/#{STATE_MACHINE[step_i]}: #{step_args}"
       [step_i + 1, send(STATE_MACHINE[step_i], *step_args)]
     end
 
@@ -34,22 +32,21 @@ module Oracle
     # state machine steps
 
     def arguments
-      @key_gen = OpenSSL::PKey::DH.new(1024)
-      [@key_gen.public_key.to_der, @key_gen.pub_key]
+      @dh = @dh_class.new
+      [@dh.p, @dh.g, @dh.public_key]
     end
 
-    def public_key(der, remote_pub_key)
-      @key_gen = OpenSSL::PKey::DH.new(der)
-      @key_gen.generate_key!
-      session_key = @key_gen.compute_key(remote_pub_key)
+    def public_key(p, g, remote_public_key)
+      @dh = @dh_class.new(p, g)
+      session_key = @dh.compute_key(remote_public_key).to_s
       @key_text = OpenSSL::Digest::SHA1.digest(session_key)[0...16]
-      [@key_gen.pub_key]
+      [@dh.public_key]
     end
 
-    def message(remote_pub_key)
-      session_key = @key_gen.compute_key(remote_pub_key)
+    def message(remote_public_key)
+      session_key = @dh.compute_key(remote_public_key).to_s
       @key_text = OpenSSL::Digest::SHA1.digest(session_key)[0...16]
-      @message = %w(lama rat dolphin)[rand_i(3)]
+      @message = %w(lama panda dolphin)[rand_i(3)]
       encrypt
     end
 
@@ -65,5 +62,28 @@ module Oracle
 
   # Inject parameters durring Diffie-Hellman key exchange
   class EchoInjecter < Echo
+    def step(args = nil)
+      step_i, result = super(args)
+      [step_i - 1, result]
+    end
+
+    def relay(*args)
+      args
+    end
+
+    alias arguments relay
+    alias response relay
+    alias authenticate relay
+
+    def public_key(p, g, _remote_public_key)
+      @p = p
+      [p, g, p]
+    end
+
+    alias arguments relay
+
+    def message(_remote_public_key)
+      [@p]
+    end
   end
 end
