@@ -42,8 +42,3 @@ module Oracle
     end
   end
 end
-
-require_relative 'common'
-
-module Oracle
-end
