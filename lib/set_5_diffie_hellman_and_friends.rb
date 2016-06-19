@@ -82,4 +82,12 @@ module DiffieHellmanAndFriends
     client = Impl::SRPMaliciousClient.new('?', '?', injected_key: injected_key)
     run_protocol(client, server, nb_steps: 5)
   end
+
+  # 38. Simplified SRP man in the middle dictionary attack
+
+  def check_simplified_srp(server_credentials, client_credentials)
+    server = Impl::SimpleSRPServer.new(*server_credentials)
+    client = Impl::SimpleSRPClient.new(*client_credentials)
+    run_protocol(client, server, nb_steps: 5)
+  end
 end
