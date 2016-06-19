@@ -100,4 +100,34 @@ RSpec.describe DiffieHellmanAndFriends do
         DiffieHellmanAndFriends.malicious_srp_client_key(x * N)[1]).to be true
     end
   end
+
+  describe '38. Offline dictionary attack on simplified SRP' do
+    matching_credentials = [
+      [%w(pablo 12345), %w(pablo 12345)],
+      [%w(picasso password), %w(picasso password)]
+    ]
+
+    unmatching_credentials = [
+      [%w(pablo 12345), %w(pablo 12346)],
+      [%w(picasso password), %w(pycasso password)]
+    ]
+
+    it 'authenticates when simplified SRP credentials matches' do
+      expect(
+        matching_credentials.all? do |server_credentials, client_credentials|
+          DiffieHellmanAndFriends.check_secure_remote_password(
+            server_credentials, client_credentials)[1]
+        end
+      ).to be true
+    end
+
+    it "fails to authenticate when simplified SRP credentials doesn't match" do
+      expect(
+        unmatching_credentials.none? do |server_credentials, client_credentials|
+          DiffieHellmanAndFriends.check_secure_remote_password(
+            server_credentials, client_credentials)[1]
+        end
+      ).to be true
+    end
+  end
 end
