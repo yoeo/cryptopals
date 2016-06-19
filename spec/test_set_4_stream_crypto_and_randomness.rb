@@ -79,7 +79,7 @@ RSpec.describe StreamCryptoAndRandomness do
       end).to be true
     end
 
-    it 'fails when the MAC doesn\'t match' do
+    it "fails when the MAC doesn't match" do
       expect(unmatching_mac.none? do |key_text, text, digest_text|
         StreamCryptoAndRandomness.md4_mac(key_text, text) == digest_text
       end).to be true
