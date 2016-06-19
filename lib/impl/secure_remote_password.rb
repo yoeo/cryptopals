@@ -96,4 +96,25 @@ module Impl
       result == 'OK'
     end
   end
+
+  # SRP malicious client that authenticates without knowing the credentials
+  class SRPMaliciousClient < SRPClient
+    def initialize(*args, injected_key: 0)
+      super(*args)
+      raise 'bad injected key' unless injected_key % @n == 0
+      @injected_key = injected_key
+    end
+
+    def client_key
+      identifier, _a_key = super()
+      [identifier, @injected_key]
+    end
+
+    def client_proof(salt, _b_key)
+      # session key doesn't depend on indentifier or password value
+      session_value = 0
+      key_for_session = hash_values(session_value)
+      [build_proof(key_for_session, salt)]
+    end
+  end
 end
