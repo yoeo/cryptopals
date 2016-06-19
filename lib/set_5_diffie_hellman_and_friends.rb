@@ -74,4 +74,12 @@ module DiffieHellmanAndFriends
     client = Impl::SRPClient.new(*client_credentials)
     run_protocol(client, server, nb_steps: 5)
   end
+
+  # 37. Break SRP, authenticate with bad credentials using a "zero" client key
+
+  def malicious_srp_client_key(injected_key)
+    server = Impl::SRPServer.new('user', 'pass')
+    client = Impl::SRPMaliciousClient.new('?', '?', injected_key: injected_key)
+    run_protocol(client, server, nb_steps: 5)
+  end
 end
