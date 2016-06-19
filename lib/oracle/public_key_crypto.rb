@@ -125,8 +125,8 @@ module Oracle
 
   # Inject parameters durring Diffie-Hellman negociated group key exchange
   class EchoNGManInTheMiddle < ManInTheMiddle
-    def initialize(version)
-      @version = version
+    def initialize(g)
+      @g = g
     end
 
     def state_machine
@@ -134,7 +134,7 @@ module Oracle
     end
 
     def ack(p, _g)
-      [p, [1, p, p - 1][@version]]
+      [p, @g]
     end
   end
 end
