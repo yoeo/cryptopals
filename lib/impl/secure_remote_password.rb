@@ -117,4 +117,38 @@ module Impl
       [build_proof(key_for_session, salt)]
     end
   end
+
+  # Simplified SRP server
+  class SimpleSRPServer < SRPServer
+    def server_key(_identifier, a_key)
+      # the client private key will be incorrect if the identifier is wrong
+      @a_key = a_key
+      @b_value = rand_value
+      @b_key = pow(@g, @b_value, @n)
+      @u_hash = rand_value(128)
+      [@salt, @b_key, @u_hash]
+    end
+
+    def server_proof(client_proof_value)
+      session_value = pow(@a_key * pow(@verifier, @u_hash, @n), @b_value, @n)
+      key_for_session = hash_values(session_value)
+
+      [build_proof(key_for_session, @salt) == client_proof_value ? 'OK' : 'KO']
+    end
+  end
+
+  # Simplified SRP client
+  class SimpleSRPClient < SRPClient
+    def client_proof(salt, b_key, u_hash)
+      x_private_key = hash_values(salt, @identifier, @password)
+      session_value = pow(b_key, @a_value + u_hash * x_private_key, @n)
+      key_for_session = hash_values(session_value)
+
+      [build_proof(key_for_session, salt)]
+    end
+
+    def client_authenticated(result)
+      result == 'OK'
+    end
+  end
 end
