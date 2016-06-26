@@ -97,4 +97,11 @@ module DiffieHellmanAndFriends
     run_protocol(client, server, nb_steps: 5)
     server.crack_password(dictionary_filename)
   end
+
+  # 39. RSA implementation
+
+  def check_rsa(text)
+    rsa = Impl::RSA.new
+    rsa.decrypt(rsa.encrypt(text))
+  end
 end
