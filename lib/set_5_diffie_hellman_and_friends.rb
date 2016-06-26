@@ -1,6 +1,8 @@
+require 'bigdecimal'
+
 require_relative 'crypto'
-require_relative 'oracle'
 require_relative 'impl'
+require_relative 'oracle'
 
 # Attacking Diffie Helman key exchange protocol and more
 # see http://cryptopals.com/sets/5/
@@ -103,5 +105,36 @@ module DiffieHellmanAndFriends
   def check_rsa(text)
     rsa = Impl::RSA.new
     rsa.decrypt(rsa.encrypt(text))
+  end
+
+  # 40. Crack RSA broadcast with fixed E = 3
+
+  def chinese_remainer_theorem(encrypted_list, n_list, n_partial_product)
+    Array.new(encrypted_list.length) do |i|
+      encrypted_list[i] * n_partial_product[i] * Impl::RSA.invmod(
+        n_partial_product[i], n_list[i])
+    end
+  end
+
+  def cubic_root(value)
+    (BigDecimal.new(value)**Rational(1, 3)).round
+  end
+
+  def compute_encrypted(encrypted_list, n_list)
+    n_product = n_list.reduce(:*)
+    n_partial_product = n_list.map { |n| n_product.div(n) }
+
+    crt_result = chinese_remainer_theorem(
+      encrypted_list, n_list, n_partial_product).reduce(:+) % n_product
+    cubic_root(crt_result.to_i)
+  end
+
+  def crack_rsa_broadcast(message)
+    nb_nodes = 3
+    rsa_nodes = Array.new(nb_nodes) { Impl::RSA.new }
+    encrypted_list = rsa_nodes.map { |rsa| rsa.encrypt(message) }
+    n_list = rsa_nodes.map { |rsa| rsa.public_key[1] }
+
+    Impl::RSA.to_text(compute_encrypted(encrypted_list, n_list))
   end
 end
