@@ -148,8 +148,18 @@ RSpec.describe DiffieHellmanAndFriends do
 
   describe '39. Implement RSA' do
     message = 'There are two annoying things about implementing RSA.'
+
     it 'encrypts and decrypts a message using RSA cryptosystem' do
       expect(DiffieHellmanAndFriends.check_rsa(message)).to eq(message)
+    end
+  end
+
+  describe '40. Implement an E=3 RSA Broadcast attack' do
+    message = "Assume you're a Javascript programmer."
+
+    it 'cracks the broadcasted RSA encrypted message when E is 3' do
+      expect(
+        DiffieHellmanAndFriends.crack_rsa_broadcast(message)).to eq(message)
     end
   end
 end
