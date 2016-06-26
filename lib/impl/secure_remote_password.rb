@@ -151,4 +151,35 @@ module Impl
       result == 'OK'
     end
   end
+
+  # Simplified SRP server that can be used to crack passwords
+  class SimpleSRPMaliciousServer < SimpleSRPServer
+    def server_key(identifier, a_key)
+      @identifier = identifier
+      super(identifier, a_key)
+    end
+
+    def server_proof(client_proof_value)
+      @client_proof_value = client_proof_value
+      ['OK']
+    end
+
+    def matches(password)
+      x_private_key = hash_values(@salt, @identifier, password)
+      verifier = pow(@g, x_private_key, @n)
+      session_value = pow(@a_key * pow(verifier, @u_hash, @n), @b_value, @n)
+
+      key_for_session = hash_values(session_value)
+      build_proof(key_for_session, @salt) == @client_proof_value
+    end
+
+    def crack_password(dictionary_filename)
+      File.open(dictionary_filename) do |dictionary_file|
+        dictionary_file.each_line do |password|
+          password.strip!
+          return password if matches(password)
+        end
+      end
+    end
+  end
 end
