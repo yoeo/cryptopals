@@ -145,4 +145,11 @@ RSpec.describe DiffieHellmanAndFriends do
           identifier, password, dictionary_filename)).to eq(password)
     end
   end
+
+  describe '39. Implement RSA' do
+    message = 'There are two annoying things about implementing RSA.'
+    it 'encrypts and decrypts a message using RSA cryptosystem' do
+      expect(DiffieHellmanAndFriends.check_rsa(message)).to eq(message)
+    end
+  end
 end
