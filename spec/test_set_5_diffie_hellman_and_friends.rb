@@ -86,18 +86,24 @@ RSpec.describe DiffieHellmanAndFriends do
 
   describe '37. Break SRP with a zero key' do
     N = NIST_PRIME
+    identifier = 'user'
+    password = 'pass'
+
     it 'confirms that session value is 0 when injected client key is 0' do
-      expect(DiffieHellmanAndFriends.malicious_srp_client_key(0)[1]).to be true
+      expect(DiffieHellmanAndFriends.malicious_srp_client_key(
+        identifier, password, 0)[1]).to be true
     end
 
     it 'confirms that session value is 0 when injected client key is N' do
-      expect(DiffieHellmanAndFriends.malicious_srp_client_key(N)[1]).to be true
+      expect(DiffieHellmanAndFriends.malicious_srp_client_key(
+        identifier, password, N)[1]).to be true
     end
 
     it 'confirms that session value is 0 when injected client key is x * N' do
-      x = (0..10).to_a.sample
+      injected_key = N * (0..10).to_a.sample
       expect(
-        DiffieHellmanAndFriends.malicious_srp_client_key(x * N)[1]).to be true
+        DiffieHellmanAndFriends.malicious_srp_client_key(
+          identifier, password, injected_key)[1]).to be true
     end
   end
 
@@ -128,6 +134,15 @@ RSpec.describe DiffieHellmanAndFriends do
             server_credentials, client_credentials)[1]
         end
       ).to be true
+    end
+
+    it 'cracks the password using MITM and dict attack on simplified SRP' do
+      identifier = 'user'
+      password = 'pass'
+      dictionary_filename = 'data/dictionary_10_000_passwords.txt'
+      expect(
+        DiffieHellmanAndFriends.crack_simplified_srp_password(
+          identifier, password, dictionary_filename)).to eq(password)
     end
   end
 end
