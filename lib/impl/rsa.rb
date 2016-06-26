@@ -69,6 +69,5 @@ module Impl
     def decrypt(value)
       cls.to_text(value.to_bn.mod_exp(*private_key))
     end
-
   end
 end
