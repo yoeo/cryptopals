@@ -139,7 +139,7 @@ RSpec.describe DiffieHellmanAndFriends do
     it 'cracks the password using MITM and dict attack on simplified SRP' do
       identifier = 'user'
       password = 'pass'
-      dictionary_filename = 'data/dictionary_10_000_passwords.txt'
+      dictionary_filename = 'data/38_dictionary_10_000_passwords.txt'
       expect(
         DiffieHellmanAndFriends.crack_simplified_srp_password(
           identifier, password, dictionary_filename)).to eq(password)
