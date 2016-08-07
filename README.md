@@ -25,7 +25,7 @@ Usage:
 
 ```
 run.rb [--help] [--slow] [SET_NUMBER]
-  SET_NUMBER  : the number of the test to run, from 1 to 4
+  SET_NUMBER  : the number of the test to run, from 1 to 6
   --slow      : run slow tests, may take hours
   --help      : show help message
 ```
