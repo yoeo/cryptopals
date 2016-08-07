@@ -6,7 +6,7 @@ It is a set of answers to Cryptopals cryptography challenges
 http://cryptopals.com
 
 ![Alt text](data/screen.png)
-
+ 
 This project implements attacks on actual cryptography, including:
  * cracking **AES encrypted messages** exploiting algorithm usage pitfalls
  * cloning Pseudo Random Number Generators to **predict random numbers**
