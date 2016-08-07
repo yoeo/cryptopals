@@ -54,6 +54,10 @@ module Impl
       [hex_text].pack('H*').force_encoding('utf-8')
     end
 
+    def drop_private!
+      @d_value = nil
+    end
+
     def public_key
       [@e_value, @n_prime]
     end
@@ -63,11 +67,15 @@ module Impl
     end
 
     def encrypt(text)
-      cls.to_value(text).to_bn.mod_exp(*public_key)
+      value = cls.to_value(text)
+      result_text = value.to_bn.mod_exp(*public_key)
+      cls.to_text(result_text)
     end
 
-    def decrypt(value)
-      cls.to_text(value.to_bn.mod_exp(*private_key))
+    def decrypt(text)
+      value = cls.to_value(text)
+      result_text = value.to_bn.mod_exp(*private_key)
+      cls.to_text(result_text)
     end
   end
 end
