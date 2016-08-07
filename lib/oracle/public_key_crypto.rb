@@ -1,3 +1,4 @@
+require 'json'
 require 'openssl'
 
 require_relative 'common'
@@ -135,6 +136,37 @@ module Oracle
 
     def ack(p, _g)
       [p, @g]
+    end
+  end
+
+  # Encrypts and decrypts a message only once
+  class UnpaddedRSA
+    def initialize(rsa_class)
+      @rsa = rsa_class.new
+      @processed = []
+    end
+
+    def known?(text)
+      text_hash = OpenSSL::Digest::SHA1.digest(text)
+      return true if @processed.include? text_hash
+      @processed << text_hash
+      false
+    end
+
+    def encrypt(text)
+      dump = JSON.dump(time: Time.now.to_i, social: text)
+      encrypted_text = @rsa.encrypt(dump)
+      known? encrypted_text
+      encrypted_text
+    end
+
+    def decrypt(text)
+      return if known? text
+      @rsa.decrypt(text)
+    end
+
+    def public_key
+      @rsa.public_key
     end
   end
 end
