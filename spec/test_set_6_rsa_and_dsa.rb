@@ -21,10 +21,4 @@ RSpec.describe RSAAndDSA do
       expect(RSAAndDSA.fake_signature(message)).to be(true)
     end
   end
-
-  describe '43. DSA key recovery from nonce' do
-    it 'recovers DSA key' do
-      expect(RSAAndDSA.dsa_key_recovered).to be(true)
-    end
-  end
 end
