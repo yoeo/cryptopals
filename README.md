@@ -19,7 +19,8 @@ of algorithms used in cryptography like SHA1, MD4, MT19937...
 
 ## How to use it?
 Use ```ruby >= 2.2```,
-install the dependencies with ```bundle install``` and run it: ```./run.rb```
+install the dependencies with ```bundle install``` and run it:
+```bundle exec run.rb```
 
 Usage:
 
@@ -32,8 +33,8 @@ run.rb [--help] [--slow] [SET_NUMBER]
 
 Examples:
 ```bash
-./run.rb          # run all tests, except the slow ones
-./run.rb --slow 2 # run all Set#2 tests including the slow ones
+bundle exec run.rb          # run all tests, except the slow ones
+bundle exec run.rb --slow 2 # run all Set#2 tests including the slow ones
 ```
 
 Go to http://cryptopals.com to view the tests,
