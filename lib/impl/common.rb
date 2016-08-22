@@ -24,7 +24,7 @@ module Impl
     def md_pad(length, big_endian: true)
       bit_len = length << 3
       length = (length + 1) % 64
-      nb_zeros = 56 - length + ((length >= 56) ? 64 : 0)
+      nb_zeros = 56 - length + (length >= 56 ? 64 : 0)
       structure = big_endian ? 'Q>1' : 'Q<1'
       [0x80] + [0] * nb_zeros + [bit_len].pack(structure).unpack('C8')
     end

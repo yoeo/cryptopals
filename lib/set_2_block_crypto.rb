@@ -114,7 +114,8 @@ module BlockCrypto
   def random_byte_guess(unknown_text, **args)
     # assume encryption mode is ECB and block_size is 16
     find_encrypted_text(
-      Oracle::RandomAppendText.new(Base64.decode64(unknown_text)), **args)
+      Oracle::RandomAppendText.new(Base64.decode64(unknown_text)), **args
+    )
   end
 
   # 15. Validate and strip PKCS#7 padding

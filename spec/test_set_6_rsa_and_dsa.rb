@@ -13,7 +13,8 @@ RSpec.describe RSAAndDSA do
 
     it 'validates a PKCS#1 v1.5 padded hash' do
       padded_hash = File.read(
-        'data/42_message.txt.pkcs1').force_encoding('ASCII-8BIT')
+        'data/42_message.txt.pkcs1'
+      ).force_encoding('ASCII-8BIT')
       expect(RSAAndDSA.valid_pkcs1(padded_hash, message)).to be(true)
     end
 

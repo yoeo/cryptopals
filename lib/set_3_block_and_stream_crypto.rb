@@ -55,9 +55,8 @@ module BlockAndStreamCrypto
     blocks = to_blocks(text)
     decrypted = blocks.map.with_index do |block, i|
       offset_text = nonce_text + [i].pack(endianness)
-      intermediate = aes_encrypt(
-        :ECB, offset_text, key_text, check: false).bytes
-      xor(block, intermediate[0...block.length])
+      intermediate = aes_encrypt(:ECB, offset_text, key_text, check: false)
+      xor(block, intermediate.bytes[0...block.length])
     end
     to_text(decrypted)
   end

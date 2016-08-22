@@ -38,7 +38,8 @@ module Impl
 
     def build_proof(key, salt)
       OpenSSL::HMAC.hexdigest(
-        OpenSSL::Digest::SHA1.new, key.to_s, salt.to_s).to_i(16)
+        OpenSSL::Digest::SHA1.new, key.to_s, salt.to_s
+      ).to_i(16)
     end
 
     def pow(x, a, n)
@@ -86,7 +87,8 @@ module Impl
 
       session_value = pow(
         b_key - @k * pow(@g, x_private_key, @n),
-        @a_value + u_hash * x_private_key, @n)
+        @a_value + u_hash * x_private_key, @n
+      )
       key_for_session = hash_values(session_value)
 
       [build_proof(key_for_session, salt)]
@@ -101,7 +103,7 @@ module Impl
   class SRPMaliciousClient < SRPClient
     def initialize(*args, injected_key: 0)
       super(*args)
-      raise 'bad injected key' unless injected_key % @n == 0
+      raise 'bad injected key' unless (injected_key % @n).zero?
       @injected_key = injected_key
     end
 

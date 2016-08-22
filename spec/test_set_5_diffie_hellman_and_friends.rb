@@ -39,18 +39,20 @@ RSpec.describe DiffieHellmanAndFriends do
     end
     it 'confirms that generated session key = 1 when injected g = 1' do
       expect(
-        DiffieHellmanAndFriends.dh_negotiated_group_mitm_attack(
-          1, [1])).to be true
+        DiffieHellmanAndFriends.dh_negotiated_group_mitm_attack(1, [1])
+      ).to be true
     end
     it 'confirms that generated session key = 0 when injected g = p' do
       expect(
-        DiffieHellmanAndFriends.dh_negotiated_group_mitm_attack(
-          P, [0])).to be true
+        DiffieHellmanAndFriends.dh_negotiated_group_mitm_attack(P, [0])
+      ).to be true
     end
     it 'confirms that session key = (1 or p - 1) when injected g = p - 1' do
       expect(
         DiffieHellmanAndFriends.dh_negotiated_group_mitm_attack(
-          P - 1, [1, P - 1])).to be true
+          P - 1, [1, P - 1]
+        )
+      ).to be true
     end
   end
 
@@ -69,7 +71,8 @@ RSpec.describe DiffieHellmanAndFriends do
       expect(
         matching_credentials.all? do |server_credentials, client_credentials|
           DiffieHellmanAndFriends.check_secure_remote_password(
-            server_credentials, client_credentials)[1]
+            server_credentials, client_credentials
+          )[1]
         end
       ).to be true
     end
@@ -78,7 +81,8 @@ RSpec.describe DiffieHellmanAndFriends do
       expect(
         unmatching_credentials.none? do |server_credentials, client_credentials|
           DiffieHellmanAndFriends.check_secure_remote_password(
-            server_credentials, client_credentials)[1]
+            server_credentials, client_credentials
+          )[1]
         end
       ).to be true
     end
@@ -90,20 +94,28 @@ RSpec.describe DiffieHellmanAndFriends do
     password = 'pass'
 
     it 'confirms that session value is 0 when injected client key is 0' do
-      expect(DiffieHellmanAndFriends.malicious_srp_client_key(
-        identifier, password, 0)[1]).to be true
+      expect(
+        DiffieHellmanAndFriends.malicious_srp_client_key(
+          identifier, password, 0
+        )[1]
+      ).to be true
     end
 
     it 'confirms that session value is 0 when injected client key is N' do
-      expect(DiffieHellmanAndFriends.malicious_srp_client_key(
-        identifier, password, N)[1]).to be true
+      expect(
+        DiffieHellmanAndFriends.malicious_srp_client_key(
+          identifier, password, N
+        )[1]
+      ).to be true
     end
 
     it 'confirms that session value is 0 when injected client key is x * N' do
       injected_key = N * (0..10).to_a.sample
       expect(
         DiffieHellmanAndFriends.malicious_srp_client_key(
-          identifier, password, injected_key)[1]).to be true
+          identifier, password, injected_key
+        )[1]
+      ).to be true
     end
   end
 
@@ -122,7 +134,8 @@ RSpec.describe DiffieHellmanAndFriends do
       expect(
         matching_credentials.all? do |server_credentials, client_credentials|
           DiffieHellmanAndFriends.check_secure_remote_password(
-            server_credentials, client_credentials)[1]
+            server_credentials, client_credentials
+          )[1]
         end
       ).to be true
     end
@@ -131,7 +144,8 @@ RSpec.describe DiffieHellmanAndFriends do
       expect(
         unmatching_credentials.none? do |server_credentials, client_credentials|
           DiffieHellmanAndFriends.check_secure_remote_password(
-            server_credentials, client_credentials)[1]
+            server_credentials, client_credentials
+          )[1]
         end
       ).to be true
     end
@@ -142,7 +156,9 @@ RSpec.describe DiffieHellmanAndFriends do
       dictionary_filename = 'data/38_dictionary_10_000_passwords.txt'
       expect(
         DiffieHellmanAndFriends.crack_simplified_srp_password(
-          identifier, password, dictionary_filename)).to eq(password)
+          identifier, password, dictionary_filename
+        )
+      ).to eq(password)
     end
   end
 
@@ -159,7 +175,8 @@ RSpec.describe DiffieHellmanAndFriends do
 
     it 'cracks the broadcasted RSA encrypted message when E is 3' do
       expect(
-        DiffieHellmanAndFriends.crack_rsa_broadcast(message)).to eq(message)
+        DiffieHellmanAndFriends.crack_rsa_broadcast(message)
+      ).to eq(message)
     end
   end
 end

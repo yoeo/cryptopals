@@ -50,7 +50,8 @@ module Impl
         value, offset = pick(round_num, block, i, j)
         state[-j] = rot(
           state[-j] + function(round_num, *shift_state(state, j)) + value,
-          offset)
+          offset
+        )
       end
       state
     end

@@ -67,8 +67,8 @@ RSpec.describe Basics do
 
     it 'breaks a repeating key XOR', slow: true do
       expect(
-        Basics.repeating_xor_crack(filename).split("\n")[0]).to eq(
-          first_line)
+        Basics.repeating_xor_crack(filename).split("\n")[0]
+      ).to eq(first_line)
     end
   end
 
@@ -78,8 +78,8 @@ RSpec.describe Basics do
     first_line = "I'm back and I'm ringin' the bell "
     it 'decripts AES-ECB encrypted file' do
       expect(
-        Basics.decrypt_aes_ecb_file(filename, key_text).split("\n")[0]).to eq(
-          first_line)
+        Basics.decrypt_aes_ecb_file(filename, key_text).split("\n")[0]
+      ).to eq(first_line)
     end
   end
 

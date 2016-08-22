@@ -31,7 +31,7 @@ module Impl
       r = n
       new_r = a
       loop do
-        return [r, t] if new_r == 0
+        return [r, t] if new_r.zero?
         quotient = r.div(new_r)
         t, new_t = new_t, t - quotient * new_t
         r, new_r = new_r, r - quotient * new_r

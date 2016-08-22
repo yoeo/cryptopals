@@ -11,13 +11,13 @@ module Crypto
 
   def add_padding(text, size: 16)
     nb_missing = size - (text.bytes.length % size)
-    nb_missing = 16 if nb_missing == 0
+    nb_missing = 16 if nb_missing.zero?
     text + nb_missing.chr * nb_missing
   end
 
   def valid_padding?(text)
     last_byte = text.bytes[-1]
-    return false if last_byte == 0
+    return false if last_byte.zero?
     chunk = text.bytes[-last_byte..-1]
     !chunk.nil? && chunk.uniq.length == 1 && chunk[0] == last_byte
   end
@@ -52,7 +52,8 @@ module Crypto
     target = blocks[pos]
     size = insert_text.bytes.length
     target[-size..-1] = xor(
-      target[-size..-1], (mask_chr * size).bytes, insert_text.bytes)
+      target[-size..-1], (mask_chr * size).bytes, insert_text.bytes
+    )
     to_text(blocks)
   end
 

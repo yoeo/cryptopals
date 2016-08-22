@@ -41,13 +41,13 @@ end
 
 # Sort methods
 
-def zero_sort(values, range:1..MAX_KEY_SIZE)
+def zero_sort(values, range: 1..MAX_KEY_SIZE)
   range.map do |e|
     [hamming_distance(values[0...e], values[e...2 * e]) / e.to_f, e]
   end.sort
 end
 
-def loop_sort(values, range:1..MAX_KEY_SIZE)
+def loop_sort(values, range: 1..MAX_KEY_SIZE)
   range.map do |key_size|
     first, *chunks = values.each_slice(key_size).to_a[0..-2]
     distance = chunks.map do |chunk|
@@ -57,7 +57,7 @@ def loop_sort(values, range:1..MAX_KEY_SIZE)
   end.sort
 end
 
-def rand_sort(values, range:1..MAX_KEY_SIZE)
+def rand_sort(values, range: 1..MAX_KEY_SIZE)
   sample_size = 20
   range.map do |key_size|
     chunks = values.each_slice(key_size).to_a[0..-2]
@@ -68,7 +68,7 @@ def rand_sort(values, range:1..MAX_KEY_SIZE)
   end.sort
 end
 
-def next_sort(values, range:1..MAX_KEY_SIZE)
+def next_sort(values, range: 1..MAX_KEY_SIZE)
   range.map do |key_size|
     chunk_slices = values.each_slice(key_size).each_slice(2).to_a[0..-2]
     distance = chunk_slices.map do |chunk_a, chunk_b|

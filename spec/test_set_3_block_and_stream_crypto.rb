@@ -6,13 +6,14 @@ RSpec.describe BlockAndStreamCrypto do
     output = '00000'
 
     it 'attacks CBC using padding information' do
-      expect(BlockAndStreamCrypto.cbc_padding_attack(filename)[0..4]).to eq(
-        output)
+      expect(
+        BlockAndStreamCrypto.cbc_padding_attack(filename)[0..4]
+      ).to eq(output)
     end
   end
 
   describe '18. Implement CTR, the stream cipher mode' do
-    encoded_text =
+    encoded =
       'L77na/nrFsKvynd6HzOoG7GHTLXsTVu9qvY/2syLXzhPweyyMTJULu/6/kXX0KSvoOLSFQ=='
     key_text = 'YELLOW SUBMARINE'
     nonce_text = "\x00" * 8
@@ -20,8 +21,8 @@ RSpec.describe BlockAndStreamCrypto do
 
     it 'implements CTR mode using ECB' do
       expect(
-        BlockAndStreamCrypto.decrypt_ctr_mode(
-          encoded_text, key_text, nonce_text)).to eq(output)
+        BlockAndStreamCrypto.decrypt_ctr_mode(encoded, key_text, nonce_text)
+      ).to eq(output)
     end
   end
 
@@ -31,8 +32,8 @@ RSpec.describe BlockAndStreamCrypto do
 
     it 'attacks text encrypted with same nonce in CTR mode' do
       expect(
-        BlockAndStreamCrypto.ctr_substitution_attack(
-          filename)[-1].downcase).to eq(output)
+        BlockAndStreamCrypto.ctr_substitution_attack(filename)[-1].downcase
+      ).to eq(output)
     end
   end
 
@@ -42,8 +43,8 @@ RSpec.describe BlockAndStreamCrypto do
 
     it 'attacks same nonce in CTR as a repeating-key XOR' do
       expect(
-        BlockAndStreamCrypto.ctr_repeating_xor_attack(
-          filename)[-1].downcase).to eq(output)
+        BlockAndStreamCrypto.ctr_repeating_xor_attack(filename)[-1].downcase
+      ).to eq(output)
     end
   end
 

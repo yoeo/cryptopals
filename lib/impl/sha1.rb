@@ -21,7 +21,7 @@ module Impl
     def feed(message_array)
       (0...message_array.length).each do |i|
         @blocks[i % 64] = message_array[i]
-        process_message_block if (i + 1) % 64 == 0
+        process_message_block if ((i + 1) % 64).zero?
       end
     end
 

@@ -64,11 +64,16 @@ module Oracle
 
   # Base class for man in the middle attacks
   class ManInTheMiddle
-    def method_missing(id, *args)
-      unless state_machine.include? id.to_s
-        raise NoMethodError, "undefined method `#{id}'"
+    def respond_to_missing?(method_name, include_private = false)
+      state_machine.include?(method_name.to_s) || super
+    end
+
+    def method_missing(method_name, *args)
+      if state_machine.include? method_name.to_s
+        args # relay
+      else
+        super
       end
-      args # relay
     end
 
     def step(args = nil)

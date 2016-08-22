@@ -63,7 +63,7 @@ def rand_shift(text)
   c = Random.srand % 256
   (1..11).to_a.reverse.map do |size|
     text.bytes.map do |e|
-      (size <= 10 && Random.srand % size == 0 ? e ^ c : e).chr
+      (size <= 10 && (Random.srand % size).zero? ? e ^ c : e).chr
     end.join
   end
 end
@@ -79,7 +79,8 @@ def divergence(scores)
 end
 
 score_methods = [
-  :letter_space_score, :sorted_frequency_score, :add_letter_and_fequency_score]
+  :letter_space_score, :sorted_frequency_score, :add_letter_and_fequency_score
+]
 shift_methods = [:bit_shift, :rand_shift]
 
 Benchmark.bm(40) do |x|

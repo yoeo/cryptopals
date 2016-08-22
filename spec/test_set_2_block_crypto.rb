@@ -16,8 +16,9 @@ RSpec.describe BlockCrypto do
     iv = "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
     output = "I'm back and I'm ringin' the bell "
     it 'implements CBC mode decrytion from AES-ECB cipher' do
-      expect(BlockCrypto.manually_decrypt_cbc(
-        filename, key, iv).split("\n")[0]).to eq(output)
+      expect(
+        BlockCrypto.manually_decrypt_cbc(filename, key, iv).split("\n")[0]
+      ).to eq(output)
     end
   end
 
@@ -56,8 +57,8 @@ RSpec.describe BlockCrypto do
 
     it 'recovers the first byte of plain text from a random ECB oracle' do
       expect(
-        BlockCrypto.random_byte_guess(
-          input, nb_bytes: 1).split("\n")[0]).to eq(output[0])
+        BlockCrypto.random_byte_guess(input, nb_bytes: 1).split("\n")[0]
+      ).to eq(output[0])
     end
     it 'recovers the plain text from a random ECB oracle', slow: true do
       expect(BlockCrypto.random_byte_guess(input).split("\n")[0]).to eq(output)
@@ -67,7 +68,8 @@ RSpec.describe BlockCrypto do
   describe '15. PKCS#7 padding validation' do
     good_padding = ["ICE ICE BABY\x04\x04\x04\x04"]
     bad_padding = [
-      "ICE ICE BABY\x05\x05\x05\x05", "ICE ICE BABY\x01\x02\x03\x04"]
+      "ICE ICE BABY\x05\x05\x05\x05", "ICE ICE BABY\x01\x02\x03\x04"
+    ]
     output = 'ICE ICE BABY'
 
     it 'strips valid padding' do
@@ -78,7 +80,8 @@ RSpec.describe BlockCrypto do
     it 'fails while stripping bad padding' do
       bad_padding.map do |e|
         expect { BlockCrypto.strip_pkcs_7_padding(e) }.to raise_exception(
-          'bad padding')
+          'bad padding'
+        )
       end
     end
   end

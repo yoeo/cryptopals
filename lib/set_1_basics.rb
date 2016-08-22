@@ -76,7 +76,7 @@ module Basics
     end.reduce(&:+)
   end
 
-  def sorted_key_sizes(values, range:1..40)
+  def sorted_key_sizes(values, range: 1..40)
     range.map do |e|
       [hamming_distance(values[0...e], values[e...2 * e]) / e.to_f, e]
     end.sort
@@ -92,7 +92,8 @@ module Basics
 
   def repeating_xor_crack(filename)
     to_text(
-      unknown_size_xor_crack(Base64.decode64(File.read(filename)).bytes)[1])
+      unknown_size_xor_crack(Base64.decode64(File.read(filename)).bytes)[1]
+    )
   end
 
   # 7. Decrypt AES in ECB mode with the key

@@ -9,7 +9,9 @@ RSpec.describe StreamCryptoAndRandomness do
     it 'attacks CTR using random access' do
       expect(
         StreamCryptoAndRandomness.ctr_random_access_attack(
-          filename, key_text).split("\n")[0]).to eq(first_line)
+          filename, key_text
+        ).split("\n")[0]
+      ).to eq(first_line)
     end
   end
 
@@ -105,28 +107,28 @@ RSpec.describe StreamCryptoAndRandomness do
 
     it 'finds the first byte of the HMAC from timing leak' do
       expect(
-        StreamCryptoAndRandomness.partial_timed_sha1_hmac(
-          'hidden.txt')).to eq(200)
+        StreamCryptoAndRandomness.partial_timed_sha1_hmac('hidden.txt')
+      ).to eq(200)
     end
 
     it 'creates a valid HMAC from timing leak', slow: true do
       expect(
-        StreamCryptoAndRandomness.full_timed_sha1_hmac(
-          'hidden.txt')).to eq(200)
+        StreamCryptoAndRandomness.full_timed_sha1_hmac('hidden.txt')
+      ).to eq(200)
     end
   end
 
   describe '32. Break HMAC-SHA1 with a slightly less artificial timing leak' do
     it 'finds the first byte of the HMAC from a tiny timing leak' do
       expect(
-        StreamCryptoAndRandomness.partial_milli_timed_sha1_hmac(
-          'hidden.txt')).to eq(200)
+        StreamCryptoAndRandomness.partial_milli_timed_sha1_hmac('hidden.txt')
+      ).to eq(200)
     end
 
     it 'creates a valid HMAC from a tiny timing leak', slow: true do
       expect(
-        StreamCryptoAndRandomness.full_milli_timed_sha1_hmac(
-          'hidden.txt')).to eq(200)
+        StreamCryptoAndRandomness.full_milli_timed_sha1_hmac('hidden.txt')
+      ).to eq(200)
     end
   end
 end

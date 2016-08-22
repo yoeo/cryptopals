@@ -21,7 +21,8 @@ get '/test' do
   raise 'missing params' unless %w(file signature).all? { |e| params.key?(e) }
 
   real_hash = OpenSSL::HMAC.digest(
-    OpenSSL::Digest::SHA1.new, SECRET_KEY, params['file']).bytes
+    OpenSSL::Digest::SHA1.new, SECRET_KEY, params['file']
+  ).bytes
   given_hash = [params['signature']].pack('H*').bytes
   [insecure_compare(real_hash, given_hash) ? 200 : 500, {}, '']
 end

@@ -110,7 +110,8 @@ module DiffieHellmanAndFriends
   def chinese_remainer_theorem(encrypted_list, n_list, n_partial_product)
     Array.new(encrypted_list.length) do |i|
       encrypted_list[i] * n_partial_product[i] * Impl::RSA.invmod(
-        n_partial_product[i], n_list[i])
+        n_partial_product[i], n_list[i]
+      )
     end
   end
 
@@ -119,7 +120,8 @@ module DiffieHellmanAndFriends
     n_partial_product = n_list.map { |n| n_product.div(n) }
 
     crt_result = chinese_remainer_theorem(
-      encrypted_list, n_list, n_partial_product).reduce(:+) % n_product
+      encrypted_list, n_list, n_partial_product
+    ).reduce(:+) % n_product
     cubic_root(crt_result.to_i)
   end
 

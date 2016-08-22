@@ -6,7 +6,7 @@ module Oracle
     attr_reader :is_ecb
 
     def initialize
-      @is_ecb = rand_i(2) == 0
+      @is_ecb = rand_i(2).zero?
       super()
     end
 
@@ -75,7 +75,8 @@ module Oracle
 
     def decrypt(iv_text, encrypted_text)
       valid_padding?(
-        aes_decrypt(:CBC, encrypted_text, @key_text, iv_text, check: false))
+        aes_decrypt(:CBC, encrypted_text, @key_text, iv_text, check: false)
+      )
     end
   end
 

@@ -14,7 +14,8 @@ module StreamCryptoAndRandomness
   def ctr_random_access_attack(filename, key_text)
     ebc_encrypted_text = Base64.decode64(File.read(filename))
     oracle = Oracle::RandomAccess.new(
-      aes_decrypt(:ECB, ebc_encrypted_text, key_text))
+      aes_decrypt(:ECB, ebc_encrypted_text, key_text)
+    )
 
     encrypted = oracle.edit.bytes
     keystream = oracle.edit("\x00" * encrypted.length, 0).bytes
