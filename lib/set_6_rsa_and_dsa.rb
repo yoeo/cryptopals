@@ -24,7 +24,7 @@ module RSAAndDSA
   def unpatch(text, s_random, public_key)
     value = Impl::RSA.to_value(text)
     n_prime = public_key[1]
-    source_value = value * Impl::RSA.invmod(s_random, n_prime) % n_prime
+    source_value = value * Impl::Modulo.invmod(s_random, n_prime) % n_prime
     Impl::RSA.to_text(source_value)
   end
 
@@ -79,5 +79,29 @@ module RSAAndDSA
 
     signature_blob = forge_signature(text, rsa.public_key)
     valid_signature?(signature_blob, text, rsa)
+  end
+
+  # 43. Recover DSA private key from insecure session key
+
+  def dsa_signing(message_signing, message_validation)
+    dsa = Impl::DSA.new
+    dsa.validate(message_validation, *dsa.sign(message_signing))
+  end
+
+  def make_public_key(x)
+    Impl::DSA::G.to_bn.mod_exp(x, Impl::DSA::P).to_i
+  end
+
+  def recover_private_key(message, r, s, y)
+    h = Digest::SHA1.hexdigest(message).to_i(16)
+    q = Impl::DSA::Q
+    (2**16).times do |k|
+      x = Impl::Modulo.invmod(r, q) * (s * k - h) % q
+      return x if make_public_key(x) == y
+    end
+  end
+
+  def dsa_key_recovered(message, r, s, y)
+    Digest::SHA1.hexdigest(recover_private_key(message, r, s, y).to_s(16))
   end
 end
