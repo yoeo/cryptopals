@@ -1,3 +1,14 @@
+require 'openssl'
+
+module OpenSSL
+  # Patch OpenSSL::BN, add integer division
+  class BN
+    def div(denominator)
+      (self / denominator)[0]
+    end
+  end
+end
+
 module Impl
   NIST_PRIME =
     'ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024' \
@@ -36,6 +47,34 @@ module Impl
 
     def self.hexdigest(*args)
       new.digest(*args).unpack('H*').first
+    end
+  end
+
+  # Operation on numbers with a modulo
+  module Modulo
+    module_function
+
+    def mod_exp(base, exponent, modulo)
+      base.to_bn.mod_exp(exponent, modulo)
+    end
+
+    def extended_gcd(a, n)
+      t = 0
+      new_t = 1
+      r = n
+      new_r = a
+      loop do
+        return [r, t] if new_r.zero?
+        quotient = r.div(new_r)
+        t, new_t = new_t, t - quotient * new_t
+        r, new_r = new_r, r - quotient * new_r
+      end
+    end
+
+    def invmod(a, n)
+      r, t = extended_gcd(a, n)
+      raise 'the modulo is not invertible' unless r == 1
+      t + (t < 0 ? n : 0)
     end
   end
 end
