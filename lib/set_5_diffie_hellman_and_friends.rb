@@ -109,7 +109,7 @@ module DiffieHellmanAndFriends
 
   def chinese_remainer_theorem(encrypted_list, n_list, n_partial_product)
     Array.new(encrypted_list.length) do |i|
-      encrypted_list[i] * n_partial_product[i] * Impl::RSA.invmod(
+      encrypted_list[i] * n_partial_product[i] * Impl::Modulo.invmod(
         n_partial_product[i], n_list[i]
       )
     end
