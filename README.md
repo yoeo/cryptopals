@@ -17,6 +17,19 @@ This project implements attacks on actual cryptography, including:
 Along with the challenges answers you will find rough implementation
 of algorithms used in cryptography like SHA1, MD4, MT19937...
 
+Current status:
+
+|Challenges set                   |Status  |
+|------------------------------------------|
+|`1. Basics`                      |**100%**|
+|`2. Block crypto`                |**100%**|
+|`3. Block & stream crypto`       |**100%**|
+|`4. Stream crypto and randomness`|**100%**|
+|`5. Diffie-Hellman and friends`  |**100%**|
+|`6. RSA and DSA`                 |*38%*   |
+|`7. Hashes`                      |*-*     |
+|`8. Abstract Algebra`            |*-*     |
+
 ## How to use it?
 Use ```ruby >= 2.2```,
 install the dependencies with ```bundle install``` and run it:
@@ -40,5 +53,8 @@ bundle exec run.rb --slow 2 # run all Set#2 tests including the slow ones
 Go to http://cryptopals.com to view the tests,
 read the code to understand the answers.
 
+## License?
+GNU GPL v3, see https://www.gnu.org/licenses/gpl-3.0.txt
+
 ## Why?
-Because it's fun to break things **let's break some crypto** :japanese_ogre:
+Because it's fun to break things **let's break some crypto** :unlock:
