@@ -20,7 +20,7 @@ of algorithms used in cryptography like SHA1, MD4, MT19937...
 Current status:
 
 |Challenges set                   |Status  |
-|------------------------------------------|
+|---------------------------------|--------|
 |`1. Basics`                      |**100%**|
 |`2. Block crypto`                |**100%**|
 |`3. Block & stream crypto`       |**100%**|
