@@ -19,16 +19,16 @@ of algorithms used in cryptography like SHA1, MD4, MT19937...
 
 Current status:
 
-|Challenges set                   |Status  |
-|---------------------------------|--------|
-|`1. Basics`                      |**100%**|
-|`2. Block crypto`                |**100%**|
-|`3. Block & stream crypto`       |**100%**|
-|`4. Stream crypto and randomness`|**100%**|
-|`5. Diffie-Hellman and friends`  |**100%**|
-|`6. RSA and DSA`                 |*38%*   |
-|`7. Hashes`                      |*-*     |
-|`8. Abstract Algebra`            |*-*     |
+|Challenges set                 |Status  |
+|-------------------------------|--------|
+|1. Basics                      |**100%**|
+|2. Block crypto                |**100%**|
+|3. Block & stream crypto       |**100%**|
+|4. Stream crypto and randomness|**100%**|
+|5. Diffie-Hellman and friends  |**100%**|
+|6. RSA and DSA                 |*50%*   |
+|7. Hashes                      |*-*     |
+|8. Abstract Algebra            |*-*     |
 
 ## How to use it?
 Use ```ruby >= 2.2```,
