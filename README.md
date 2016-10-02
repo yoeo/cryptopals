@@ -5,7 +5,16 @@ Hacking modern Cryptography / Cryptopals challenges answers in Ruby
 It is a set of answers to Cryptopals cryptography challenges
 http://cryptopals.com
 
-![Alt text](data/screen.png)
+|Challenges set                                                 |Solving status|
+|---------------------------------------------------------------|--------------|
+|1. [Basics](http://cryptopals.com/sets/1)                      |**100%**      |
+|2. [Block crypto](http://cryptopals.com/sets/2)                |**100%**      |
+|3. [Block & stream crypto](http://cryptopals.com/sets/3)       |**100%**      |
+|4. [Stream crypto and randomness](http://cryptopals.com/sets/4)|**100%**      |
+|5. [Diffie-Hellman and friends](http://cryptopals.com/sets/5)  |**100%**      |
+|6. [RSA and DSA](http://cryptopals.com/sets/6)                 |*50%*         |
+|7. [Hashes](http://cryptopals.com/sets/7)                      |*-*           |
+|8. [Abstract Algebra](http://cryptopals.com/sets/8)            |*-*           |
 
 This project implements attacks on actual cryptography, including:
  * cracking **AES encrypted messages** exploiting algorithm usage pitfalls
@@ -17,18 +26,7 @@ This project implements attacks on actual cryptography, including:
 Along with the challenges answers you will find rough implementation
 of algorithms used in cryptography like SHA1, MD4, MT19937...
 
-Current status:
-
-|Challenges set                                                 |Status  |
-|---------------------------------------------------------------|--------|
-|1. [Basics](http://cryptopals.com/sets/1)                      |**100%**|
-|2. [Block crypto](http://cryptopals.com/sets/2)                |**100%**|
-|3. [Block & stream crypto](http://cryptopals.com/sets/3)       |**100%**|
-|4. [Stream crypto and randomness](http://cryptopals.com/sets/4)|**100%**|
-|5. [Diffie-Hellman and friends](http://cryptopals.com/sets/5)  |**100%**|
-|6. [RSA and DSA](http://cryptopals.com/sets/6)                 |*50%*   |
-|7. [Hashes](http://cryptopals.com/sets/7)                      |*-*     |
-|8. [Abstract Algebra](http://cryptopals.com/sets/8)            |*-*     |
+![Alt text](data/screen.png)
 
 ## How to use it?
 Use ```ruby >= 2.2```,
