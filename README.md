@@ -1,11 +1,11 @@
-# Yet Another Cryptopals repo [![Build Status](https://travis-ci.org/yoeo/cryptopals.svg?branch=master)](https://travis-ci.org/yoeo/cryptopals)
-Hacking state-of-the-art Cryptography / *Cryptopals challenges solved in Ruby*
+# Hacking state-of-the-art Cryptography [![Build Status](https://travis-ci.org/yoeo/cryptopals.svg?branch=master)](https://travis-ci.org/yoeo/cryptopals)
+*Cryptopals challenges solved in Ruby*
 
 ## What is it?
 
-This project demonstrates **attacks on State-Of-The-Art
-Cryptography implementation**, including
-AES, RSA, SHA-1, pseudo-random number generators...
+This project demonstrates attacks on **State-Of-The-Art
+Cryptography** implementations, including
+AES, RSA, SHA-1, random number generators and much more...
 
 ## Which attacks are implemented?
 
@@ -133,7 +133,8 @@ AES, RSA, SHA-1, pseudo-random number generators...
 
 #### More details...
 
-The attacks are fully described on http://cryptopals.com website:
+The vulnerabilities exploited in the attacks
+are fully described on http://cryptopals.com:
 
 1. [Basics](http://cryptopals.com/sets/1)
 2. [Block crypto](http://cryptopals.com/sets/2)
