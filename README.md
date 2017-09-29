@@ -148,9 +148,9 @@ are fully described on http://cryptopals.com:
 6. [RSA and DSA](http://cryptopals.com/sets/6)
 7. [Hashes](http://cryptopals.com/sets/7)
 
-Along with the challenges answers you will find
+In the source code, you will find
 [rough implementation of algorithms](lib/impl)
-used in cryptography like SHA1, MD4, MT19937...
+used in cryptography like SHA-1, MD4, MT19937...
 
 ## How to use it?
 
