@@ -173,7 +173,7 @@ RSpec.describe DiffieHellmanAndFriends do
   describe '40. Implement an E=3 RSA Broadcast attack' do
     message = "Assume you're a Javascript programmer."
 
-    it 'cracks the broadcasted RSA encrypted message when E is 3' do
+    it 'cracks the broadcast RSA encrypted message when E is 3' do
       expect(
         DiffieHellmanAndFriends.crack_rsa_broadcast(message)
       ).to eq(message)

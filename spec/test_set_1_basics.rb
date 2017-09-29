@@ -35,7 +35,7 @@ RSpec.describe Basics do
   describe '4. Detect single-character XOR' do
     input_filename = 'data/4.txt'
     output = "Now that the party is jumping\n5"
-    it 'finds encryped line' do
+    it 'finds encrypted line' do
       expect(Basics.detect_byte_xor(input_filename)).to eq(output)
     end
   end
@@ -76,7 +76,7 @@ RSpec.describe Basics do
     filename = 'data/7.txt'
     key_text = 'YELLOW SUBMARINE'
     first_line = "I'm back and I'm ringin' the bell "
-    it 'decripts AES-ECB encrypted file' do
+    it 'decrypts AES-ECB encrypted file' do
       expect(
         Basics.decrypt_aes_ecb_file(filename, key_text).split("\n")[0]
       ).to eq(first_line)

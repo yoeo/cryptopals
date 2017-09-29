@@ -15,7 +15,7 @@ RSpec.describe BlockCrypto do
     key = 'YELLOW SUBMARINE'
     iv = "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
     output = "I'm back and I'm ringin' the bell "
-    it 'implements CBC mode decrytion from AES-ECB cipher' do
+    it 'implements CBC mode decryption from AES-ECB cipher' do
       expect(
         BlockCrypto.manually_decrypt_cbc(filename, key, iv).split("\n")[0]
       ).to eq(output)
