@@ -181,4 +181,4 @@ GNU GPL v3, see https://www.gnu.org/licenses/gpl-3.0.txt
 
 ## Why?
 
-Because it's fun to break things **let's break some crypto** :unlock:
+Because it's fun, **let's break some crypto** :unlock:
