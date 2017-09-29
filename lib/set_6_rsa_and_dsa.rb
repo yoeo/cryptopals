@@ -1,6 +1,9 @@
+require 'base64'
 require 'digest'
 require 'json'
+require 'timeout'
 
+require_relative 'crypto'
 require_relative 'impl'
 require_relative 'oracle'
 
@@ -24,8 +27,7 @@ module RSAAndDSA
   def unpatch(text, s_random, public_key)
     value = Impl::RSA.to_value(text)
     n_prime = public_key[1]
-    source_value = value * Impl::Modulo.invmod(s_random, n_prime) % n_prime
-    Impl::RSA.to_text(source_value)
+    Impl::RSA.to_text(value * Impl::Modulo.invmod(s_random, n_prime) % n_prime)
   end
 
   def recover_unpadded(text)
@@ -138,5 +140,17 @@ module RSAAndDSA
     signatures = data.select { |e| e[1] == r }[0..2]
     x, y = compute_keys(*signatures)
     [to_sha1(x), y]
+  end
+
+  # 45. Force DSA parameters
+
+  def force_params(messages, **params)
+    dsa = Impl::DSA.new(**params)
+    signature = Timeout.timeout(2) do
+      dsa.sign('a random message')
+    end
+    messages.all? { |e| dsa.validate(e, *signature) }
+  rescue Timeout::Error
+    'Timeout'
   end
 end

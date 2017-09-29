@@ -68,4 +68,25 @@ RSpec.describe RSAAndDSA do
       expect(RSAAndDSA.reused_key_recovery(messages_file)).to eq([x_hash, y])
     end
   end
+
+  describe '45: DSA parameter tampering' do
+    messages = ['Hello, world', 'Goodbye, world']
+    DSA_P =
+      '800000000000000089e1855218a0e7dac38136ffafa72eda7' \
+      '859f2171e25e65eac698c1702578b07dc2a1076da241c76c6' \
+      '2d374d8389ea5aeffd3226a0530cc565f3bf6b50929139ebe' \
+      'ac04f48c3c84afb796d61e5a4f9a8fda812ab59494232c7d2' \
+      'b4deb50aa18ee9e132bfa85ac4374d7f9091abc3d015efc87' \
+      '1a584471bb1'.to_i(16)
+
+    it 'launches a DOS attack when g = np' do
+      n = (0..10).to_a.sample
+      expect(RSAAndDSA.force_params([], g: n * DSA_P)).to eq('Timeout')
+    end
+
+    it 'creates a DSA god key that validates any message when g = 1 + np' do
+      n = (0..10).to_a.sample
+      expect(RSAAndDSA.force_params(messages, g: 1 + n * DSA_P)).to be(true)
+    end
+  end
 end

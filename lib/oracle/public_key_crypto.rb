@@ -144,10 +144,31 @@ module Oracle
     end
   end
 
-  # Encrypts and decrypts a message only once
-  class UnpaddedRSA
+  # Base RSA class
+  class BaseRSA
     def initialize(rsa_class)
       @rsa = rsa_class.new
+    end
+
+    def public_key
+      @rsa.public_key
+    end
+
+    def encrypt(text)
+      @rsa.encrypt(text)
+    end
+
+    private
+
+    def decrypt(text)
+      @rsa.decrypt(text)
+    end
+  end
+
+  # Encrypts and decrypts a message only once
+  class UnpaddedRSA < BaseRSA
+    def initialize(rsa_class)
+      super(rsa_class)
       @processed = []
     end
 
@@ -160,18 +181,21 @@ module Oracle
 
     def encrypt(text)
       dump = JSON.dump(time: Time.now.to_i, social: text)
-      encrypted_text = @rsa.encrypt(dump)
+      encrypted_text = super(dump)
       known? encrypted_text
       encrypted_text
     end
 
     def decrypt(text)
       return if known? text
-      @rsa.decrypt(text)
+      super(text)
     end
+  end
 
-    def public_key
-      @rsa.public_key
+  # Encrypts and checks decrypted text parity
+  class ParityCheckerRSA < BaseRSA
+    def even?(text)
+      @rsa.cls.to_value(decrypt(text)).even?
     end
   end
 end

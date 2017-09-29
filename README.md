@@ -12,9 +12,8 @@ http://cryptopals.com
 |3. [Block & stream crypto](http://cryptopals.com/sets/3)       |**100%**      |
 |4. [Stream crypto and randomness](http://cryptopals.com/sets/4)|**100%**      |
 |5. [Diffie-Hellman and friends](http://cryptopals.com/sets/5)  |**100%**      |
-|6. [RSA and DSA](http://cryptopals.com/sets/6)                 |*50%*         |
+|6. [RSA and DSA](http://cryptopals.com/sets/6)                 |*63%*         |
 |7. [Hashes](http://cryptopals.com/sets/7)                      |*-*           |
-|8. [Abstract Algebra](http://cryptopals.com/sets/8)            |*-*           |
 
 This project implements attacks on actual cryptography, including:
  * cracking **AES encrypted messages** exploiting algorithm usage pitfalls
