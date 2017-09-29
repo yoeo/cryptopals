@@ -3,9 +3,13 @@
 
 ## What is it?
 
-This project demonstrates attacks on **State-Of-The-Art
+This project demonstrates attacks on **state-of-the-art
 Cryptography** implementations, including
-AES, RSA, SHA-1, random number generators and much more...
+[AES](https://fr.wikipedia.org/wiki/Advanced_Encryption_Standard),
+[RSA](https://en.wikipedia.org/wiki/RSA_%28cryptosystem%29),
+[SHA-1](https://fr.wikipedia.org/wiki/SHA-1),
+[random number generators](https://en.wikipedia.org/wiki/Mersenne_Twister)
+and much more...
 
 ## Which attacks are implemented?
 
