@@ -53,7 +53,7 @@ RSpec.describe RSAAndDSA do
     end
   end
 
-  describe '44: DSA nonce recovery from repeated nonce' do
+  describe '44. DSA nonce recovery from repeated nonce' do
     messages_file = 'data/44.txt'
     y =
       '2d026f4bf30195ede3a088da85e398ef869611d0f68f07' \
@@ -69,7 +69,7 @@ RSpec.describe RSAAndDSA do
     end
   end
 
-  describe '45: DSA parameter tampering' do
+  describe '45. DSA parameter tampering' do
     messages = ['Hello, world', 'Goodbye, world']
     DSA_P =
       '800000000000000089e1855218a0e7dac38136ffafa72eda7' \
