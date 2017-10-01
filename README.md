@@ -142,15 +142,7 @@ and much more...
 #### More details...
 
 The vulnerabilities exploited in the attacks
-are fully described on http://cryptopals.com:
-
-1. [Basics](http://cryptopals.com/sets/1)
-2. [Block crypto](http://cryptopals.com/sets/2)
-3. [Block & stream crypto](http://cryptopals.com/sets/3)
-4. [Stream crypto and randomness](http://cryptopals.com/sets/4)
-5. [Diffie-Hellman and friends](http://cryptopals.com/sets/5)
-6. [RSA and DSA](http://cryptopals.com/sets/6)
-7. [Hashes](http://cryptopals.com/sets/7)
+are fully described on http://cryptopals.com
 
 In the source code, you will find
 [rough implementation of algorithms](lib/impl)
