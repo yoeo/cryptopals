@@ -18,27 +18,28 @@ module RSAAndDSA
 
   def patch(text, public_key)
     value = Impl::RSA.to_value(text)
-    e_value, n_prime = public_key
-    s_random = rand_i(1..n_prime.to_i)
-    result = mod_exp(s_random, e_value, n_prime) * value % n_prime
+    e_value, n_modulus = public_key
+    s_random = rand_i(1..n_modulus.to_i)
+    result = mod_exp(s_random, e_value, n_modulus) * value % n_modulus
     [Impl::RSA.to_text(result), s_random]
   end
 
   def unpatch(text, s_random, public_key)
-    value = Impl::RSA.to_value(text)
-    n_prime = public_key[1]
-    Impl::RSA.to_text(value * Impl::Modulo.invmod(s_random, n_prime) % n_prime)
+    value = Impl::RSA.to_value(text).to_bn
+    n_modulus = public_key[1]
+    result = value.mod_mul(s_random.to_bn.mod_inverse(n_modulus), n_modulus)
+    Impl::RSA.to_text(result)
   end
 
   def recover_unpadded(text)
-    oracle = Oracle::UnpaddedRSA.new(Impl::RSA)
+    oracle = Oracle::DecryptOnce.new(Impl::RSA)
     encrypted = oracle.encrypt(text)
 
     patched_encrypted, s_random = patch(encrypted, oracle.public_key)
     patched_decrypted = oracle.decrypt(patched_encrypted)
-    unpached_decrypted = unpatch(patched_decrypted, s_random, oracle.public_key)
+    decrypted = unpatch(patched_decrypted, s_random, oracle.public_key)
 
-    JSON.load(unpached_decrypted)['social']
+    JSON.load(decrypted)['social']
   end
 
   # 42. Fake RSA signature
@@ -50,15 +51,17 @@ module RSAAndDSA
   end
 
   def forge_signature(text, public_key)
-    e_value, n_prime = public_key
+    e_value, n_modulus = public_key
     raise 'work only for E=3 RSA public key' unless e_value == 3
 
     text_hash = Digest::SHA256.hexdigest(text)
-    signature_text = signature_content(text_hash, n_prime.to_i.bit_length / 8)
+    signature_text = signature_content(text_hash, n_modulus.bit_length / 8)
     Impl::RSA.to_text(cubic_root(Impl::RSA.to_value(signature_text)))
   end
 
   def valid_pkcs1(signature_text, text)
+    # checking PKCS1 v1.5 type 2 padding, see:
+    # https://security.stackexchange.com/a/90490
     signature_text = "\x00" + signature_text unless signature_text[0] == "\x00"
     re = "\x00\x01[\xFF]+\x00([^\n]+)".force_encoding('ASCII-8BIT')
 
@@ -152,5 +155,45 @@ module RSAAndDSA
     messages.all? { |e| dsa.validate(e, *signature) }
   rescue Timeout::Error
     'Timeout'
+  end
+
+  # 46. RSA crack from parity check
+
+  def result_even?(oracle, encrypted, index, value = 0)
+    multiplier = (value + (1 << index)).to_bn.mod_exp(*oracle.public_key)
+    computed = multiplier.mod_mul(encrypted, oracle.public_key[1])
+    oracle.even?(Impl::RSA.to_text(computed))
+  end
+
+  def smallest_multiplier(oracle, encrypted)
+    n_modulus_bit_length = oracle.public_key[1].bit_length
+    top_index = (1...n_modulus_bit_length).each do |e|
+      break e unless result_even?(oracle, encrypted, e + 1)
+    end
+    top_index.downto(1).reduce(0) do |a, e|
+      result_even?(oracle, encrypted, e, a) ? a + (1 << e) : a
+    end
+  end
+
+  def border_control(oracle, encrypted)
+    # the math:
+    #   exists s E ]0, n[ : m*s <= n <= m*(s + 1)
+    #   -> m <= n/s <= m + 1/s
+    #   -> n/s E [m, m + 1/s] : 1/s <= 1
+    #   -> floor(n/s) = m
+    n_modulus = oracle.public_key[1]
+    s_multiplier = smallest_multiplier(oracle, encrypted)
+    Impl::RSA.to_text(n_modulus.to_i / s_multiplier)
+  end
+
+  def parity_crack(message)
+    oracle = Oracle::ParityChecker.new(Impl::RSA)
+    encrypted = Impl::RSA.to_value(oracle.encrypt(Base64.decode64(message)))
+    border_control(oracle, encrypted)
+  end
+
+  # 47. RSA crack message from Bleichenbacher's PKCS 1.5 hack, simple case
+
+  def bleichenbacher_crack(_message)
   end
 end

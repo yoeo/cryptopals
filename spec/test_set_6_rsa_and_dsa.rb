@@ -89,4 +89,16 @@ RSpec.describe RSAAndDSA do
       expect(RSAAndDSA.force_params(messages, g: 1 + n * DSA_P)).to be(true)
     end
   end
+
+  describe '46. RSA parity oracle' do
+    message =
+      'VGhhdCdzIHdoeSBJIGZvdW5kIHlvdSBkb24ndCBwbGF5IGFyb3VuZCB3aXRoIHRoZSBGd' \
+      'W5reSBDb2xkIE1lZGluYQ=='
+    result =
+      "That's why I found you don't play around with the Funky Cold Medina"
+
+    it 'cracks RSA encrypted message using one bit leak' do
+      expect(RSAAndDSA.parity_crack(message)).to eq(result)
+    end
+  end
 end
