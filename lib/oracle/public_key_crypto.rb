@@ -146,8 +146,8 @@ module Oracle
 
   # Base RSA class
   class BaseRSA
-    def initialize(rsa_class)
-      @rsa = rsa_class.new
+    def initialize(rsa_class, key_size = 1024)
+      @rsa = rsa_class.new(key_size)
     end
 
     def public_key
@@ -166,7 +166,7 @@ module Oracle
   end
 
   # Encrypts and decrypts a message only once
-  class UnpaddedRSA < BaseRSA
+  class DecryptOnce < BaseRSA
     def initialize(rsa_class)
       super(rsa_class)
       @processed = []
@@ -192,10 +192,20 @@ module Oracle
     end
   end
 
-  # Encrypts and checks decrypted text parity
-  class ParityCheckerRSA < BaseRSA
+  # Checks that the decrypted message is even
+  class ParityChecker < BaseRSA
     def even?(text)
-      @rsa.cls.to_value(decrypt(text)).even?
+      Impl::RSA.to_value(@rsa.decrypt(text)).even?
+    end
+  end
+
+  # Checks decryption; fails when the padding is not correct
+  class RSAPaddingChecker < BaseRSA
+    def valid?(text)
+      @rsa.decrypt(text)
+      true
+    rescue
+      false
     end
   end
 end

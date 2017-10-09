@@ -3,6 +3,8 @@ require 'openssl'
 module OpenSSL
   # Patch OpenSSL::BN, add integer division
   class BN
+    alias bit_length num_bits
+
     def div(denominator)
       (self / denominator)[0]
     end
@@ -50,6 +52,7 @@ module Impl
     end
   end
 
+  # FIXME: class unneeded, see bn.mod_inverse
   # Operation on numbers with a modulo
   module Modulo
     module_function
