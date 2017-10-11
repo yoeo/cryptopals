@@ -38,8 +38,12 @@ module Impl
       SecureRandom.random_number(1..@q)
     end
 
+    def hash_value(text)
+      Digest::SHA1.hexdigest(text).to_i(16)
+    end
+
     def sign(text)
-      text_hash = Digest::SHA1.hexdigest(text).to_i(16)
+      text_hash = hash_value(text)
       loop do
         k = rand_mod_q
         r = @g.to_bn.mod_exp(k, @p) % @q
@@ -55,7 +59,7 @@ module Impl
     def validate(text, r, s)
       return false unless 0 < r && r < @q && 0 < s && s < @q
 
-      text_hash = Digest::SHA1.hexdigest(text).to_i(16)
+      text_hash = hash_value(text)
       w = s.to_bn.mod_inverse(@q)
       u_one = text_hash * w % @q
       u_two = r * w % @q
