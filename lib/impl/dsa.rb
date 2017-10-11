@@ -1,4 +1,5 @@
 require 'digest'
+require 'openssl'
 require 'securerandom'
 
 require_relative 'common'
@@ -6,8 +7,6 @@ require_relative 'common'
 module Impl
   # Implements DSA, Digital Signature Algorithm
   class DSA
-    include Modulo
-
     P =
       '800000000000000089e1855218a0e7dac38136ffafa72eda7' \
       '859f2171e25e65eac698c1702578b07dc2a1076da241c76c6' \
@@ -36,30 +35,28 @@ module Impl
     end
 
     def rand_mod_q
-      # not using randome_number(1..@q) for ruby < 2.3 compatibility
-      1 + SecureRandom.random_number(@q - 1)
+      SecureRandom.random_number(1..@q)
     end
 
     def sign(text)
       text_hash = Digest::SHA1.hexdigest(text).to_i(16)
       loop do
         k = rand_mod_q
-        inv_k = invmod(k, @q)
-        r = mod_exp(@g, k, @p) % @q
-        s = inv_k * (text_hash + @x * r) % @q
+        r = @g.to_bn.mod_exp(k, @p) % @q
+        s = k.to_bn.mod_inverse(@q).mod_mul(text_hash + @x * r, @q)
         break [r.to_i, s] unless r.zero? || s.zero?
       end
     end
 
     def build_validator(u_one, u_two)
-      mod_exp(@g, u_one, @p) * mod_exp(@y, u_two, @p) % @p % @q
+      @g.to_bn.mod_exp(u_one, @p) * @y.to_bn.mod_exp(u_two, @p) % @p % @q
     end
 
     def validate(text, r, s)
       return false unless 0 < r && r < @q && 0 < s && s < @q
 
       text_hash = Digest::SHA1.hexdigest(text).to_i(16)
-      w = invmod(s, @q)
+      w = s.to_bn.mod_inverse(@q)
       u_one = text_hash * w % @q
       u_two = r * w % @q
       build_validator(u_one, u_two) == r

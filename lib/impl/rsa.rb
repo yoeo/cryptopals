@@ -6,8 +6,6 @@ require_relative 'common'
 module Impl
   # RSA cryptosystem implementation
   class RSA
-    include Modulo
-
     def initialize(key_size = 1024)
       p_prime = OpenSSL::BN.generate_prime(key_size)
       q_prime = OpenSSL::BN.generate_prime(key_size)
@@ -15,7 +13,7 @@ module Impl
       totient = (p_prime - 1) * (q_prime - 1)
       @n_modulus = p_prime * q_prime
       @e_value = 3
-      @d_value = invmod(@e_value, totient)
+      @d_value = @e_value.to_bn.mod_inverse(totient)
     end
 
     def cls
@@ -46,13 +44,13 @@ module Impl
 
     def encrypt(text)
       value = cls.to_value(text)
-      result = mod_exp(value, *public_key)
+      result = value.to_bn.mod_exp(*public_key)
       cls.to_text(result)
     end
 
     def decrypt(text)
       value = cls.to_value(text)
-      result = mod_exp(value, *private_key)
+      result = value.to_bn.mod_exp(*private_key)
       cls.to_text(result)
     end
   end

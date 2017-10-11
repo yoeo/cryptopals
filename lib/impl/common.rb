@@ -51,33 +51,4 @@ module Impl
       new.digest(*args).unpack('H*').first
     end
   end
-
-  # FIXME: class unneeded, see bn.mod_inverse
-  # Operation on numbers with a modulo
-  module Modulo
-    module_function
-
-    def mod_exp(base, exponent, modulo)
-      base.to_bn.mod_exp(exponent, modulo)
-    end
-
-    def extended_gcd(a, n)
-      t = 0
-      new_t = 1
-      r = n
-      new_r = a
-      loop do
-        return [r, t] if new_r.zero?
-        quotient = r.div(new_r)
-        t, new_t = new_t, t - quotient * new_t
-        r, new_r = new_r, r - quotient * new_r
-      end
-    end
-
-    def invmod(a, n)
-      r, t = extended_gcd(a, n)
-      raise 'the modulo is not invertible' unless r == 1
-      t + (t < 0 ? n : 0)
-    end
-  end
 end

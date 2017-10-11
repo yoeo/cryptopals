@@ -1,6 +1,7 @@
 require 'base64'
 require 'digest'
 require 'json'
+require 'openssl'
 require 'timeout'
 
 require_relative 'crypto'
@@ -19,9 +20,9 @@ module RSAAndDSA
   def patch(text, public_key)
     value = Impl::RSA.to_value(text)
     e_value, n_modulus = public_key
-    s_random = rand_i(1..n_modulus.to_i)
-    result = mod_exp(s_random, e_value, n_modulus) * value % n_modulus
-    [Impl::RSA.to_text(result), s_random]
+    s_random = rand_i(1..n_modulus.to_i).to_bn
+    result = s_random.mod_exp(e_value, n_modulus).mod_mul(value, n_modulus)
+    [Impl::RSA.to_text(result), s_random.to_i]
   end
 
   def unpatch(text, s_random, public_key)
@@ -62,6 +63,7 @@ module RSAAndDSA
   def valid_pkcs1(signature_text, text)
     # checking PKCS1 v1.5 type 2 padding, see:
     # https://security.stackexchange.com/a/90490
+    # FIXME:
     signature_text = "\x00" + signature_text unless signature_text[0] == "\x00"
     re = "\x00\x01[\xFF]+\x00([^\n]+)".force_encoding('ASCII-8BIT')
 
@@ -98,7 +100,7 @@ module RSAAndDSA
   end
 
   def make_private_key(h, k, r, s)
-    Impl::Modulo.invmod(r, Impl::DSA::Q) * (s * k - h) % Impl::DSA::Q
+    r.to_bn.mod_inverse(Impl::DSA::Q).to_i * (s * k - h) % Impl::DSA::Q
   end
 
   def recover_private_key(message, r, s, y)
@@ -131,7 +133,7 @@ module RSAAndDSA
     s_one, r, m_one = *first_signature
     s_two, _, m_two = *second_signature
     q = Impl::DSA::Q
-    k = Impl::Modulo.invmod(s_one - s_two, q) * (m_one - m_two) % q
+    k = (s_one - s_two).to_bn.mod_inverse(q).mod_mul(m_one - m_two, q)
     x = make_private_key(m_one, k, r, s_one)
     [x, make_public_key(x)]
   end
