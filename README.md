@@ -127,7 +127,7 @@ and much more...
   - [x] **41. Implement unpadded message recovery oracle**
     - recovers unpadded RSA encrypted message
   - [x] **42. Bleichenbacher's e=3 RSA Attack**
-    - validates a PKCS#1 v1.5 padded hash
+    - validates a legit RSA PKCS#1 v1.5 padded signature
     - generates a fake signature for an e=3 RSA public key
   - [x] **43. DSA key recovery from nonce**
     - validates well signed message
@@ -138,6 +138,8 @@ and much more...
   - [x] **45. DSA parameter tampering**
     - launches a DOS attack when g = np
     - creates a DSA god key that validates any message when g = 1 + np
+  - [x] **46. RSA parity oracle**
+    - cracks RSA encrypted message using one bit leak
 
 #### More details...
 
