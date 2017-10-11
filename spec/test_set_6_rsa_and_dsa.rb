@@ -11,11 +11,8 @@ RSpec.describe RSAAndDSA do
   describe '42. Bleichenbacher\'s e=3 RSA Attack' do
     message = 'hi mom'
 
-    it 'validates a PKCS#1 v1.5 padded hash' do
-      padded_hash = File.read(
-        'data/42_message.txt.pkcs1'
-      ).force_encoding('ASCII-8BIT')
-      expect(RSAAndDSA.valid_pkcs1(padded_hash, message)).to be(true)
+    it 'validates a legit RSA PKCS#1 v1.5 padded signature' do
+      expect(RSAAndDSA.legit_signature(message)).to be(true)
     end
 
     it 'generates a fake signature for an e=3 RSA public key' do

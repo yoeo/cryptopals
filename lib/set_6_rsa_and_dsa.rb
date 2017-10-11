@@ -60,32 +60,16 @@ module RSAAndDSA
     Impl::RSA.to_text(cubic_root(Impl::RSA.to_value(signature_text)))
   end
 
-  def valid_pkcs1(signature_text, text)
-    # checking PKCS1 v1.5 type 2 padding, see:
-    # https://security.stackexchange.com/a/90490
-    # FIXME:
-    signature_text = "\x00" + signature_text unless signature_text[0] == "\x00"
-    re = "\x00\x01[\xFF]+\x00([^\n]+)".force_encoding('ASCII-8BIT')
-
-    match = signature_text.match(re)
-    return false unless match
-    signature_hash = match.captures[0].split[1]
-    text_hash = Digest::SHA256.hexdigest(text)
-
-    signature_hash == text_hash
-  end
-
-  def valid_signature?(signature_blob, text, rsa)
-    signature_text = rsa.encrypt(signature_blob).force_encoding('ASCII-8BIT')
-    valid_pkcs1(signature_text, text)
+  def legit_signature(text)
+    oracle = Oracle::RSASigning.new(Impl::SignaturePaddedRSA)
+    signature_blob = oracle.sign(text)
+    oracle.valid?(signature_blob, text)
   end
 
   def fake_signature(text)
-    rsa = Impl::RSA.new
-    rsa.drop_private!
-
-    signature_blob = forge_signature(text, rsa.public_key)
-    valid_signature?(signature_blob, text, rsa)
+    oracle = Oracle::RSASigning.new(Impl::SignaturePaddedRSA)
+    signature_blob = forge_signature(text, oracle.public_key)
+    oracle.valid?(signature_blob, text)
   end
 
   # 43. Recover DSA private key from insecure session key
@@ -194,7 +178,7 @@ module RSAAndDSA
     border_control(oracle, encrypted)
   end
 
-  # 47. RSA crack message from Bleichenbacher's PKCS 1.5 hack, simple case
+  # 47. RSA crack message from Bleichenbacher's PKCS#1 v1.5 hack, simple case
 
   def bleichenbacher_crack(_message)
   end

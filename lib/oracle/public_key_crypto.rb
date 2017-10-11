@@ -199,13 +199,18 @@ module Oracle
     end
   end
 
-  # Checks decryption; fails when the padding is not correct
-  class RSAPaddingChecker < BaseRSA
-    def valid?(text)
-      @rsa.decrypt(text)
-      true
-    rescue
-      false
+  # RSA messages signing
+  class RSASigning < BaseRSA
+    def sign(text)
+      text_hash = Digest::SHA256.hexdigest(text)
+      signature_text = "SHA256(f)= #{text_hash}"
+      @rsa.decrypt(signature_text) # adds padding
+    end
+
+    def valid?(signature_blob, text)
+      signature_text = @rsa.encrypt(signature_blob) # removes padding
+      signature_hash = signature_text.split[1]
+      signature_hash == Digest::SHA256.hexdigest(text)
     end
   end
 end

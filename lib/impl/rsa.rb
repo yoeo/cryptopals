@@ -56,15 +56,8 @@ module Impl
   end
 
   # Abstract RSA implementation with padding
+  # See https://security.stackexchange.com/a/90490
   class PaddedRSA < RSA
-    def encrypt(text)
-      super(append_padding(text))
-    end
-
-    def decrypt(text)
-      remove_padding(super(text))
-    end
-
     def append_padding(_)
       raise NotImplementedError
     end
@@ -92,7 +85,16 @@ module Impl
   end
 
   # RSA with PCSK1 v1.5 Type 1 padding: used for messages signature
+  # BUG: security flaws inside -> not enough checks
   class SignaturePaddedRSA < PaddedRSA
+    def encrypt(text)
+      remove_padding(super(text))
+    end
+
+    def decrypt(text)
+      super(append_padding(text))
+    end
+
     def append_padding(text)
       ps = "\xFF" * ps_length(text)
       "\x00\x01#{ps}\x00#{text}"
@@ -105,7 +107,16 @@ module Impl
   end
 
   # RSA with PCSK1 v1.5 Type 2 padding: used for messages encryption
+  # BUG: security flaws inside -> not enough checks
   class EncryptionPaddedRSA < PaddedRSA
+    def encrypt(text)
+      super(append_padding(text))
+    end
+
+    def decrypt(text)
+      remove_padding(super(text))
+    end
+
     def append_padding(text)
       size = ps_length(text)
       ps = Array.new(size) { SecureRandom.random_number(1..255).chr }.join
