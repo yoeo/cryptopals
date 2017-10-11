@@ -152,7 +152,7 @@ used in cryptography like SHA-1, MD4, MT19937...
 
 ## How to use it?
 
-Use ```ruby >= 2.2```,
+Use ```ruby >= 2.3```,
 install the dependencies with ```bundle install``` and run it:
 ```bundle exec run.rb```
 
