@@ -1,4 +1,5 @@
-require 'set_6_rsa_and_dsa'
+require 'set_6_rsa_and_dsa_part_1'
+require 'set_6_rsa_and_dsa_part_2'
 
 RSpec.describe RSAAndDSA do
   describe '41. Implement unpadded message recovery oracle' do
