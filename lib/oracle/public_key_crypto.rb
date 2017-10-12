@@ -192,13 +192,6 @@ module Oracle
     end
   end
 
-  # Checks that the decrypted message is even
-  class ParityChecker < BaseRSA
-    def even?(text)
-      Impl::RSA.to_value(@rsa.decrypt(text)).even?
-    end
-  end
-
   # RSA messages signing
   class RSASigning < BaseRSA
     def sign(text)
@@ -211,6 +204,13 @@ module Oracle
       signature_text = @rsa.encrypt(signature_blob) # removes padding
       signature_hash = signature_text.split[1]
       signature_hash == Digest::SHA256.hexdigest(text)
+    end
+  end
+
+  # Checks that the decrypted message is even
+  class ParityChecker < BaseRSA
+    def even?(text)
+      Impl::RSA.to_value(@rsa.decrypt(text)).even?
     end
   end
 end
