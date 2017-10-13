@@ -64,6 +64,6 @@ module RSAAndDSA
 
   # 47. RSA crack message from Bleichenbacher's PKCS#1 v1.5 hack, simple case
 
-  def bleichenbacher_crack(_message)
+  def chosen_cyphertext_attack(message)
   end
 end
