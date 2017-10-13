@@ -160,18 +160,19 @@ Usage:
 
 ```
 run.rb [--help] [--slow] [SET_NUMBER]
-  SET_NUMBER  : the number of the test to run, from 1 to 6
-  --slow      : run slow tests, may take hours
+  SET_NUMBER  : the number of the hacks set to run, from 1 to 6
+  --slow      : run slow hacks, may take hours
   --help      : show help message
 ```
 
 Examples:
 ```bash
-bundle exec run.rb          # run all tests, except the slow ones
-bundle exec run.rb --slow 2 # run all Set#2 tests including the slow ones
-```
+bundle exec run.rb          # run all hacks, except the slow ones
+bundle exec run.rb --slow   # run all hacks, including the slow ones
 
-![Alt text](data/screen.png)
+bundle exec run.rb 6        # run all Set#6 hacks, except the slow ones
+bundle exec run.rb --slow 2 # run all Set#2 hacks, including the slow ones
+```
 
 ## License?
 
