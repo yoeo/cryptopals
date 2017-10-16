@@ -61,13 +61,13 @@ module RSAAndDSA
   end
 
   def legit_signature(text)
-    oracle = Oracle::RSASigning.new(Impl::SignaturePaddedRSA)
+    oracle = Oracle::Signing.new(Impl::SignaturePaddedRSA)
     signature_blob = oracle.sign(text)
     oracle.valid?(signature_blob, text)
   end
 
   def fake_signature(text)
-    oracle = Oracle::RSASigning.new(Impl::SignaturePaddedRSA)
+    oracle = Oracle::Signing.new(Impl::SignaturePaddedRSA)
     signature_blob = forge_signature(text, oracle.public_key)
     oracle.valid?(signature_blob, text)
   end

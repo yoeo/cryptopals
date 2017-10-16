@@ -193,7 +193,7 @@ module Oracle
   end
 
   # RSA messages signing
-  class RSASigning < BaseRSA
+  class Signing < BaseRSA
     def sign(text)
       text_hash = Digest::SHA256.hexdigest(text)
       signature_text = "SHA256(f)= #{text_hash}"
@@ -204,6 +204,8 @@ module Oracle
       signature_text = @rsa.encrypt(signature_blob) # removes padding
       signature_hash = signature_text.split[1]
       signature_hash == Digest::SHA256.hexdigest(text)
+    rescue
+      false
     end
   end
 
@@ -211,6 +213,16 @@ module Oracle
   class ParityChecker < BaseRSA
     def even?(text)
       Impl::RSA.to_value(@rsa.decrypt(text)).even?
+    end
+  end
+
+  # Checks that the decrypted message padding is valid
+  class MessageCkecker < BaseRSA
+    def valid?(text)
+      @rsa.decrypt(text)
+      true
+    rescue
+      false
     end
   end
 end

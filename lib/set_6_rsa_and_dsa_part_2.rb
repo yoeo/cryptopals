@@ -56,14 +56,17 @@ module RSAAndDSA
     Impl::RSA.to_text(n_modulus.to_i / s_multiplier)
   end
 
-  def parity_crack(message)
+  def parity_crack(text)
     oracle = Oracle::ParityChecker.new(Impl::RSA)
-    encrypted = Impl::RSA.to_value(oracle.encrypt(Base64.decode64(message)))
+    encrypted = Impl::RSA.to_value(oracle.encrypt(Base64.decode64(text)))
     border_control(oracle, encrypted)
   end
 
   # 47. RSA crack message from Bleichenbacher's PKCS#1 v1.5 hack, simple case
 
-  def chosen_cyphertext_attack(message)
+  def chosen_cyphertext_attack(text)
+    oracle = Oracle::MessageCkecker.new(Impl::EncryptionPaddedRSA)
+    encrypted = oracle.encrypt(text)
+    oracle.valid?(encrypted)
   end
 end
